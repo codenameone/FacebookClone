@@ -1,7 +1,6 @@
 package com.codename1.fbclone;
 
 import com.codename1.fbclone.forms.LoginForm;
-import com.codename1.fbclone.forms.MainForm;
 import com.codename1.fbclone.forms.SignupForm;
 import com.codename1.ui.Form;
 import com.codename1.ui.layouts.BorderLayout;

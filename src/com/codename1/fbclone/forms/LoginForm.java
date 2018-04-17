@@ -31,7 +31,6 @@ public class LoginForm extends Form {
         logoContainer.setUIID("LoginTitle");
         
         signUp.addActionListener(e -> UIController.showSignup());
-        login.addActionListener(e -> UIController.showMainUI());
         
         add(NORTH, logoContainer);
         if(!isTablet()) {
