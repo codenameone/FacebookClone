@@ -1,0 +1,246 @@
+#Constants { 
+    includeNativeBool: true; 
+    scrollVisibleBool: false;
+    labelGap: 2;
+    capsButtonUiids: "BlueText,GreenButton,BlueButton,NextButton";
+    landscapeTitleUiidBool: true;
+}
+
+StatusBar {
+    background: transparent;
+}
+
+Container {
+    background: transparent;
+}
+
+Default  { 
+    color: black; 
+    font-family:  "native:MainLight";
+    font-size: 3mm;
+}
+
+@font-face {
+    font-family: "facebook";
+    src: url(res/facebook.ttf);
+}
+
+IconFont {
+    font-family: "facebook";    
+    font-size: 14mm;
+    color: white;
+    background-color: transparent;
+}
+
+Toolbar {
+    padding: 2mm;
+    border: empty;
+    background-color: #4367b3;
+}
+
+ToolbarLandscpae {
+    padding: 1mm;
+    border: empty;
+    background-color: #4367b3;
+}
+
+Form {
+    background-color: white;
+    margin: 0px;
+    padding: 0px;
+}
+
+SplashForm {
+    background-color: #4367b3;
+    margin: 0px;
+    padding: 0px;
+}
+
+LoginTitle {
+    background-image: url(images/login-banner.jpg);
+    cn1-source-dpi: 0;
+    cn1-background-type: cn1-image-scaled-fill;
+    margin: 0px;
+    padding: 8mm;
+}
+
+PaddedContainer {
+    padding: 3mm;
+    margin: 0mm;
+    background: transparent;
+}
+
+BaseButton {
+    text-align: center;
+    font-family:  "native:MainRegular";
+    font-size: 3mm;
+    padding: 3mm;
+    margin: 2mm;
+    color: white;    
+}
+
+BlueButtonOnBlueBackground {
+    border-radius: 1mm;
+    background: #587EBE;
+    cn1-derive: BaseButton;
+}
+
+BlueButton {
+    background: #587EBE;
+    font-family:  "native:MainBold";
+    cn1-derive: BaseButton;
+}
+
+BlueText {
+    cn1-derive: BaseButton;
+    font-family:  "native:MainBold";
+    color: #385898;
+    background: transparent;
+}
+
+GreenButton {
+    cn1-derive: BaseButton;
+    font-family:  "native:MainBold";
+    background: #00A400;
+}
+
+TextHint {
+    font-family:  "native:MainLight";
+    font-size: 3mm;    
+    padding: 2mm;
+}
+
+WhiteLinkButton {
+    cn1-derive: BaseButton;
+    font-family:  "native:MainLight";
+    margin: 0px;
+}
+
+TextField {
+    margin: 2mm;
+}
+
+GroupElementFirst {
+    padding: 3mm;
+}
+
+GroupElementLast {
+    padding: 3mm;
+}
+
+SignupSubHeader {
+    font-family:  "native:MainBold";
+    font-size: 3.5mm;
+    text-align: center;
+    margin: 0px;
+    padding: 3mm;    
+}
+
+SignupForm {
+    background-color: #F6F7F8;
+    cn1-derive: SplashForm;
+}
+
+Title {
+    font-family:  "native:MainLight";
+    font-size: 5mm;
+    padding: 2mm 1mm 2mm 1mm;
+    margin: 0px;
+    color: white;
+}
+
+TitleLandscape {
+    font-family:  "native:MainLight";
+    font-size: 3.7mm;
+    padding: 0px;
+    margin: 0px;
+    color: white;
+}
+
+TitleCommand {
+    font-family:  "native:MainLight";
+    font-size: 3mm;
+    padding: 3mm 1mm 3mm 1mm;
+    margin: 0px;
+    color: white;
+}
+
+TitleCommandLandscape {
+    font-family:  "native:MainLight";
+    font-size: 2.5mm;
+    padding: 0px 1mm 0px 1mm;
+    margin: 0px;
+    color: white;
+}
+
+BackCommandLandscape {
+    font-family:  "native:MainLight";
+    font-size: 2.5mm;
+    padding: 0px 1mm 0px 1mm;
+    margin: 0px;
+    color: white;
+}
+
+BackCommand {
+    font-family:  "native:MainLight";
+    font-size: 3mm;
+    padding: 3mm 0.5mm 3mm 0.5mm;
+    margin: 0px;
+    color: white;
+}
+
+NextButton {
+    cn1-derive: BlueButtonOnBlueBackground;
+    margin-top: 3.5mm;
+}
+
+FloatingHint {
+    font-family:  "native:MainRegular";
+    font-size: 2mm;
+    padding: 2mm;
+    margin: 0px;
+    color: black;
+}
+
+GenderIcons {
+    cn1-derive: IconFont;
+    color: #587EBE;
+}
+
+GenderIcons.selected, GenderIcons.pressed {
+    color: white;
+}
+
+GenderToggle {
+    text-align: center;
+    border-radius: 3mm;
+    padding: 4mm;
+    background: white;
+    margin: 2mm;
+    border-color: #cccccc;
+    border-width: 1px;
+}
+
+GenderToggle.selected, GenderToggle.pressed  {
+    background: #587EBE;
+    border-color: #cccccc;
+    border-width: 1px;
+}
+
+BlueLink {
+    cn1-derive: BaseButton;
+    color: blue;
+    font-size: 2.5mm;
+    padding: 1.5mm;
+    font-family:  "native:MainLight";
+}
+
+BoldBlueLink {
+    cn1-derive: BlueLink;
+    font-family:  "native:MainBold";
+}
+
+CenterLabel {
+    text-align: center;
+    font-size: 2.5mm;
+}
