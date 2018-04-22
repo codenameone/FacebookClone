@@ -2,7 +2,7 @@
     includeNativeBool: true; 
     scrollVisibleBool: false;
     labelGap: 2;
-    capsButtonUiids: "BlueText,GreenButton,BlueButton,NextButton";
+    capsButtonUiids: "BlueText,GreenButton,BlueButton,NextButton,FriendConfirm,FriendDelete";
     landscapeTitleUiidBool: true;
 }
 
@@ -17,7 +17,7 @@ Container {
 Default  { 
     color: black; 
     font-family:  "native:MainLight";
-    font-size: 3mm;
+    font-size: 2.6mm;
 }
 
 @font-face {
@@ -27,20 +27,20 @@ Default  {
 
 IconFont {
     font-family: "facebook";    
-    font-size: 14mm;
+    font-size: 13mm;
     color: white;
     background-color: transparent;
 }
 
 Toolbar {
-    padding: 2mm;
-    border: empty;
+    padding: 1mm;
+    border: none;
     background-color: #4367b3;
 }
 
 ToolbarLandscpae {
-    padding: 1mm;
-    border: empty;
+    padding: 0.5mm;
+    border: none;
     background-color: #4367b3;
 }
 
@@ -73,8 +73,8 @@ PaddedContainer {
 BaseButton {
     text-align: center;
     font-family:  "native:MainRegular";
-    font-size: 3mm;
-    padding: 3mm;
+    font-size: 2.6mm;
+    padding: 1.4mm;
     margin: 2mm;
     color: white;    
 }
@@ -106,7 +106,7 @@ GreenButton {
 
 TextHint {
     font-family:  "native:MainLight";
-    font-size: 3mm;    
+    font-size: 2.6mm;    
     padding: 2mm;
 }
 
@@ -130,7 +130,7 @@ GroupElementLast {
 
 SignupSubHeader {
     font-family:  "native:MainBold";
-    font-size: 3.5mm;
+    font-size: 3mm;
     text-align: center;
     margin: 0px;
     padding: 3mm;    
@@ -143,7 +143,7 @@ SignupForm {
 
 Title {
     font-family:  "native:MainLight";
-    font-size: 5mm;
+    font-size: 4mm;
     padding: 2mm 1mm 2mm 1mm;
     margin: 0px;
     color: white;
@@ -151,7 +151,7 @@ Title {
 
 TitleLandscape {
     font-family:  "native:MainLight";
-    font-size: 3.7mm;
+    font-size: 3mm;
     padding: 0px;
     margin: 0px;
     color: white;
@@ -159,8 +159,8 @@ TitleLandscape {
 
 TitleCommand {
     font-family:  "native:MainLight";
-    font-size: 3mm;
-    padding: 3mm 1mm 3mm 1mm;
+    font-size: 2.5mm;
+    padding: 1mm;
     margin: 0px;
     color: white;
 }
@@ -183,7 +183,7 @@ BackCommandLandscape {
 
 BackCommand {
     font-family:  "native:MainLight";
-    font-size: 3mm;
+    font-size: 2.6mm;
     padding: 3mm 0.5mm 3mm 0.5mm;
     margin: 0px;
     color: white;
@@ -197,7 +197,7 @@ NextButton {
 FloatingHint {
     font-family:  "native:MainRegular";
     font-size: 2mm;
-    padding: 2mm;
+    padding: 2mm 2mm 0.5mm 2mm;
     margin: 0px;
     color: black;
 }
@@ -230,7 +230,7 @@ GenderToggle.selected, GenderToggle.pressed  {
 BlueLink {
     cn1-derive: BaseButton;
     color: blue;
-    font-size: 2.5mm;
+    font-size: 2.2mm;
     padding: 1.5mm;
     font-family:  "native:MainLight";
 }
@@ -242,5 +242,238 @@ BoldBlueLink {
 
 CenterLabel {
     text-align: center;
-    font-size: 2.5mm;
+    font-size: 2.2mm;
+}
+
+TitleSearch {
+    color: white;
+    font-family:  "native:MainThin";
+    font-size: 2.6mm;
+    border: 1px #000000 cn1-pill-border;   
+    background-color: #433db6;
+    padding: 0.5mm 2mm 0.5mm 2mm;
+    margin: 0.5mm 1.5mm 0.5mm 1.5mm;
+}
+
+Tab {
+    font-family:  "native:MainLight";
+    font-size: 4mm;    
+    color: black;
+    text-align: center;
+    padding: 2mm 2mm 1mm 2mm;
+    border: none;
+    background: white;
+    margin: 0px 0px 2px 0px;
+}
+
+TabsContainer {
+    margin: 0px;
+    padding: 0px 0px 1px 0px;
+    background: gray;
+}
+
+Tab.selected, Tab.pressed {
+    color: #2D72E4;
+    border: none;
+}
+
+NewPostButton {
+    border: 1px #cccccc cn1-pill-border;   
+    background-color: white;
+    padding: 1mm 2mm 1mm 2mm;
+    margin: 1mm;
+    color: black;
+    font-family:  "native:MainLight";
+    font-size: 2.6mm;    
+}
+
+GalleryButton {
+    color: #4B4F56;
+    font-family:  "native:MainLight";
+    font-size: 1.5mm;    
+    text-align: center;
+    padding: 0px 2mm 0px 2mm;
+    margin: 0px;
+}
+
+PaddedSeparator {
+    background: #DCDEE3;
+    padding: 0.5mm;
+    margin: 0px;
+}
+
+HalfPaddedSeparator {
+    cn1-derive: PaddedSeparator;
+    padding: 0.25mm;
+}
+
+PostTitle {
+    font-family:  "native:MainRegular";
+    font-size: 3.5mm;    
+}
+
+PostSubTitle {
+    font-family:  "native:MainRegular";
+    font-size: 2mm;    
+    color: #aaaaaa;
+}
+
+SmallBlueCircle {
+    border: cn1-round-border;   
+    background-color: blue;
+    padding: 0.5mm;
+    margin: 0px 2mm 0px 1mm;
+    color: white;
+    font-family:  "native:MainLight";
+    font-size: 2mm;        
+}
+
+CleanButton {
+    cn1-derive: BaseButton;
+    font-family:  "native:MainLight";
+    font-size: 2.5mm;        
+    margin: 0;
+    color: #4B4F56;
+}
+
+HalfPaddedContainer {
+    padding: 1.5mm;
+    margin: 0mm;
+    background: transparent;
+}
+
+FriendSubtitle {
+    color: #999999;
+    font-size: 3mm;        
+    font-family:  "native:MainRegular";
+    padding: 1.5mm;
+}
+
+SmallRedCircle {
+    border: cn1-round-border;   
+    background-color: red;
+    padding: 1mm;
+    margin: 1mm;
+    color: white;
+    font-family:  "native:MainRegular";
+    font-size: 2.2mm;        
+}
+
+FriendName {
+    color: black;
+    font-size: 3mm;        
+    font-family:  "native:MainLight";
+}
+
+FriendConfirm {
+    padding: 2mm;
+    margin: 1mm;
+    border-radius: 1mm;
+    background: #587EBE;
+    font-family:  "native:MainLight";
+    cn1-derive: BaseButton;    
+    font-size: 2mm;
+}
+
+FriendDelete {
+    background: white;
+    border-color: #999999;
+    border-width: 1px;
+    color: #999999;
+    cn1-derive: FriendConfirm;      
+}
+
+SmallBlueLabel {
+    color: blue;
+    font-size: 2mm;
+    padding: 1mm;
+    font-family:  "native:MainLight";
+}
+
+MultiLine1 {
+    font-size: 3.5mm;
+    padding: 1mm;
+    color: black;
+    font-family:  "native:MainLight";    
+}
+
+MultiLine1WithMargin {
+    cn1-derive: MultiLine1;      
+    margin-top: 2.5mm;
+}
+
+MultiLine2 {
+    font-size: 2.6mm;
+    padding: 1mm;
+    color: gray;
+    font-family:  "native:MainLight";    
+}
+
+LargeCircleIcon {
+    border: cn1-round-border;   
+    background-color: blue;
+    padding: 1.5mm;
+    margin: 2mm;
+    color: white;
+    font-family:  "native:MainLight";
+    font-size: 7mm;        
+}
+
+FriendCombo {
+    padding: 2mm;
+    margin: 1mm;
+    border-radius: 1mm;
+    border-width: 1px;
+    border-color: gray;
+    background: transparent;
+    color: gray;
+    font-family:  "native:MainLight";
+    font-size: 2.6mm;
+}
+
+PostStyleBase {
+    background-color: black;
+    color: white;
+    padding: 3mm;
+    text-align: center;
+    font-family:  "native:MainRegular";    
+    font-size: 4.5mm;            
+}
+
+PostStyleHearts {
+    cn1-derive: PostStyleBase;
+    background-image: url(images/hearts.jpg);
+    cn1-source-dpi: 0;
+    cn1-background-type: cn1-image-scaled-fill;
+}
+
+PostStyleHands {
+    cn1-derive: PostStyleBase;
+    background-image: url(images/hands.jpg);
+    cn1-source-dpi: 0;
+    cn1-background-type: cn1-image-scaled-fit;
+    background: #243761;
+}
+
+PostStyleBlack {
+    cn1-derive: PostStyleBase;
+}
+
+PostStyleRed {
+    cn1-derive: PostStyleBase;
+    background: red;
+}
+
+PostStylePurple {
+    cn1-derive: PostStyleBase;
+    background: #c600ff;
+}
+
+PostStyleText {
+    background: transparent;
+    color: white;
+    padding: 3mm;
+    text-align: center;
+    font-family:  "native:MainRegular";    
+    font-size: 5mm;            
 }

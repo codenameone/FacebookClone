@@ -45,5 +45,6 @@ public class UIController {
     }
     
     public static void showMainUI() {
+        new MainForm().show();
     }
 }

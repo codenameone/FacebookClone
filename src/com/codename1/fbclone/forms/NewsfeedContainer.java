@@ -1,11 +1,11 @@
 package com.codename1.fbclone.forms;
 
-import com.codename1.components.MultiButton;
 import com.codename1.components.SpanLabel;
 import com.codename1.fbclone.components.RichTextView;
 import com.codename1.fbclone.data.Comment;
 import com.codename1.fbclone.data.Post;
 import com.codename1.fbclone.data.User;
+import com.codename1.fbclone.server.ServerAPI;
 import com.codename1.l10n.L10NManager;
 import com.codename1.ui.Button;
 import static com.codename1.ui.CN.*;
@@ -18,60 +18,67 @@ import com.codename1.ui.Label;
 import com.codename1.ui.TextArea;
 import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.layouts.BoxLayout;
+import com.codename1.ui.layouts.FlowLayout;
 import com.codename1.ui.layouts.GridLayout;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class NewsfeedContainer extends InfiniteContainer {
+    private long lastTime;
 
     @Override
     public Component[] fetchComponents(int index, int amount) {        
-        if(index == 0) {
-            Comment firstPost = new Comment().
-                    date.set(System.currentTimeMillis()).
-                    text.set("First post!!!").
-                    id.set("Comment1").
-                    userId.set(User.me().id.get());
-            
-            Post dummyPost = new Post().
-                    userId.set(User.me().id.get()).
-                    content.set("This is a <b>POST</b> that includes HTML").
-                    date.set(System.currentTimeMillis() - 60000).
-                    id.set("Post1").
-                    type.set("html").
-                    likes.add(User.me()).
-                    comments.add(firstPost);
-            return new Component[] {
-                createPostBar(),
-                createSpace(),
-                createNewsItem(User.me(), dummyPost)
-            };
+        ArrayList<Component> components = new ArrayList<>();
+        if(lastTime == 0 || index == 0) {
+            lastTime = System.currentTimeMillis();
+            components.add(createPostBar());
+            components.add(UIUtils.createSpace());
         }
-        return null;
+        List<Post> response = ServerAPI.fetchTimelinePosts(lastTime, amount);
+        if(response == null) {
+            return null;
+        }
+            
+        for(Post p : response) {
+            components.add(createNewsItem(p.user.get(), p));
+            components.add(UIUtils.createHalfSpace());
+            lastTime = p.date.getLong();
+        }
+        Component[] cmps = new Component[components.size()];
+        components.toArray(cmps);
+        return cmps;
     }
     
     private Container createNewsItem(User u, Post p) {
-        Button avatar = new Button("", u.getAvatar(), "Label");
-        Button name = new Button(u.firstName.get() + " " + u.familyName.get(),
-                "PostTitle");
+        Button avatar = new Button("", u.getAvatar(6.5f), "CleanButton");
+        Button name = new Button(u.fullName(), "PostTitle");
         Button postTime = new Button(formatRelativeTime(p.date.get()), 
                 "PostSubTitle");
         Button menu = new Button("", "Label");
         FontImage.setMaterialIcon(menu, 
                 FontImage.MATERIAL_MORE_HORIZ);
         Container titleArea = BorderLayout.centerEastWest(
-                BoxLayout.encloseY(name, postTime), menu, avatar);
+                FlowLayout.encloseMiddle(BoxLayout.encloseY(name, postTime)), 
+                FlowLayout.encloseIn(menu), avatar);
+        titleArea.setUIID("HalfPaddedContainer");
         Component body;
         if(p.content.get().indexOf('<') > -1) {
             body = new RichTextView(p.content.get());
         } else {
             body = new SpanLabel(p.content.get());
         }
+        body.setUIID("HalfPaddedContainer");
+
         
-        Button like = new Button("Like", "Label");
-        Button comment = new Button("Comment", "Label");
-        Button share = new Button("Share", "Label");
+        Button like = new Button("Like", "CleanButton");
+        Button comment = new Button("Comment", "CleanButton");
+        Button share = new Button("Share", "CleanButton");
+        FontImage.setMaterialIcon(like, FontImage.MATERIAL_THUMB_UP);
+        FontImage.setMaterialIcon(comment, FontImage.MATERIAL_COMMENT);
+        FontImage.setMaterialIcon(share, FontImage.MATERIAL_SHARE);
         
-        Container stats = new Container(new BorderLayout());
+        Container stats = new Container(new BorderLayout(), "PaddedContainer");
         if(p.likes.size() > 0) {
             Label thumbUp = new Label("", "SmallBlueCircle");
             FontImage.setMaterialIcon(thumbUp, 
@@ -85,6 +92,7 @@ public class NewsfeedContainer extends InfiniteContainer {
         }
         
         Container buttonBar = GridLayout.encloseIn(3, like, comment, share);
+        buttonBar.setUIID("HalfPaddedContainer");
         
         return BoxLayout.encloseY(titleArea, body, stats, buttonBar);
     }
@@ -102,20 +110,17 @@ public class NewsfeedContainer extends InfiniteContainer {
                         formatDateShortStyle(new Date(time));
     }
     
-    private Label createSpace() {
-        Label l = new Label("", "PaddedSeparator");
-        l.setShowEvenIfBlank(true);
-        return l;
-    }
-    
     private Container createPostBar() {
-        Button avatar = new Button(User.me().getAvatar());
+        Button avatar = new Button(ServerAPI.me().getAvatar(6.5f), "Label");
         Button writePost = new Button("What's on your mind?", 
                 "NewPostButton");
         Button gallery = new Button("Photo", "GalleryButton");
         FontImage.setMaterialIcon(gallery, 
-                FontImage.MATERIAL_PHOTO_LIBRARY, 3);
+                FontImage.MATERIAL_PHOTO_LIBRARY, 2.9f);
         gallery.setTextPosition(BOTTOM);
-        return BorderLayout.centerEastWest(writePost, gallery, avatar);
+        Container c = BorderLayout.centerEastWest(writePost, gallery, avatar);
+        c.setUIID("HalfPaddedContainer");
+        writePost.addActionListener(e -> new NewPostForm().show());
+        return c;
     }
 }

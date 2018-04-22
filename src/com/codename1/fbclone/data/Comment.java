@@ -13,7 +13,7 @@ public class Comment implements PropertyBusinessObject {
     public final LongProperty<Comment> date =  new LongProperty<>("date");
     public final Property<String, Comment> text = new Property<>("text");
     
-    private final PropertyIndex idx = new PropertyIndex(this, "Post", 
+    private final PropertyIndex idx = new PropertyIndex(this, "Comment", 
             id, postId, userId, date, parentComment, text);
     
     @Override
