@@ -14,10 +14,10 @@ Container {
     background: transparent;
 }
 
-Default  { 
+Default { 
     color: black; 
     font-family:  "native:MainLight";
-    font-size: 3mm;
+    font-size: 2.6mm;
 }
 
 @font-face {
@@ -27,20 +27,20 @@ Default  {
 
 IconFont {
     font-family: "facebook";    
-    font-size: 14mm;
+    font-size: 13mm;
     color: white;
     background-color: transparent;
 }
 
 Toolbar {
-    padding: 2mm;
-    border: empty;
+    padding: 1mm;
+    border: none;
     background-color: #4367b3;
 }
 
 ToolbarLandscpae {
-    padding: 1mm;
-    border: empty;
+    padding: 0.5mm;
+    border: none;
     background-color: #4367b3;
 }
 
@@ -73,8 +73,8 @@ PaddedContainer {
 BaseButton {
     text-align: center;
     font-family:  "native:MainRegular";
-    font-size: 3mm;
-    padding: 3mm;
+    font-size: 2.6mm;
+    padding: 1.4mm;
     margin: 2mm;
     color: white;    
 }
@@ -106,7 +106,7 @@ GreenButton {
 
 TextHint {
     font-family:  "native:MainLight";
-    font-size: 3mm;    
+    font-size: 2.6mm;    
     padding: 2mm;
 }
 
@@ -130,7 +130,7 @@ GroupElementLast {
 
 SignupSubHeader {
     font-family:  "native:MainBold";
-    font-size: 3.5mm;
+    font-size: 3mm;
     text-align: center;
     margin: 0px;
     padding: 3mm;    
@@ -143,7 +143,7 @@ SignupForm {
 
 Title {
     font-family:  "native:MainLight";
-    font-size: 5mm;
+    font-size: 4mm;
     padding: 2mm 1mm 2mm 1mm;
     margin: 0px;
     color: white;
@@ -151,7 +151,7 @@ Title {
 
 TitleLandscape {
     font-family:  "native:MainLight";
-    font-size: 3.7mm;
+    font-size: 3mm;
     padding: 0px;
     margin: 0px;
     color: white;
@@ -159,8 +159,8 @@ TitleLandscape {
 
 TitleCommand {
     font-family:  "native:MainLight";
-    font-size: 3mm;
-    padding: 3mm 1mm 3mm 1mm;
+    font-size: 2.5mm;
+    padding: 1mm;
     margin: 0px;
     color: white;
 }
@@ -183,7 +183,7 @@ BackCommandLandscape {
 
 BackCommand {
     font-family:  "native:MainLight";
-    font-size: 3mm;
+    font-size: 2.5mm;
     padding: 3mm 0.5mm 3mm 0.5mm;
     margin: 0px;
     color: white;
@@ -197,7 +197,7 @@ NextButton {
 FloatingHint {
     font-family:  "native:MainRegular";
     font-size: 2mm;
-    padding: 2mm;
+    padding: 2mm 2mm 0.5mm 2mm;
     margin: 0px;
     color: black;
 }
@@ -230,7 +230,7 @@ GenderToggle.selected, GenderToggle.pressed  {
 BlueLink {
     cn1-derive: BaseButton;
     color: blue;
-    font-size: 2.5mm;
+    font-size: 2.2mm;
     padding: 1.5mm;
     font-family:  "native:MainLight";
 }
@@ -242,5 +242,5 @@ BoldBlueLink {
 
 CenterLabel {
     text-align: center;
-    font-size: 2.5mm;
+    font-size: 2.2mm;
 }
