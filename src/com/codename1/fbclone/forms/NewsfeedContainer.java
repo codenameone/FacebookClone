@@ -83,12 +83,13 @@ public class NewsfeedContainer extends InfiniteContainer {
             Label thumbUp = new Label("", "SmallBlueCircle");
             FontImage.setMaterialIcon(thumbUp, 
                     FontImage.MATERIAL_THUMB_UP);
-            Label count = new Label("" + p.likes.size());
+            Label count = new Label("" + p.likes.size(), "SmallLabel");
             stats.add(WEST, BoxLayout.encloseX(thumbUp, count));
         }
         
         if(p.comments.size() > 0) {
-            stats.add(EAST, new Label(p.comments.size() + " comments"));
+            stats.add(EAST, new Label(p.comments.size() + " comments", 
+                    "SmallLabel"));
         }
         
         Container buttonBar = GridLayout.encloseIn(3, like, comment, share);
