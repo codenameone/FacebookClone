@@ -23,7 +23,7 @@ import com.codename1.ui.plaf.Style;
 
 public class NewPostForm extends Form {
     private static final String[] POST_STYLES = { 
-        "TextArea", "PostStyleHearts", "PostStyleHands", "PostStyleBlack", 
+        "Label", "PostStyleHearts", "PostStyleHands", "PostStyleBlack", 
         "PostStyleRed", "PostStylePurple" };
     public NewPostForm() {
         super("Create Post", new BorderLayout());
@@ -45,15 +45,11 @@ public class NewPostForm extends Form {
                         FlowLayout.encloseIn(friends)));
         add(NORTH, userSettings);
         TextArea post = new TextArea(3, 80);
+        post.setUIID("Label");
         post.setGrowByContent(false);
         Container postStyles = createPostStyles(post);
-        add(CENTER, LayeredLayout.encloseIn(post, postStyles));
-        LayeredLayout postParentLayout = (LayeredLayout)
-                post.getParent().getLayout();
-        postParentLayout.getOrCreateConstraint(post).setInsets("0px");
-        postParentLayout.getOrCreateConstraint(postStyles).
-                setInsets("auto 0px 0px 0px");
-        postParentLayout.setReferenceComponentBottom(post, postStyles, 1f);
+        add(CENTER, LayeredLayout.encloseIn(
+                BorderLayout.north(post), BorderLayout.south(postStyles)));
         setEditOnShow(post);
     }
     
@@ -61,7 +57,6 @@ public class NewPostForm extends Form {
     private Container createPostStyles(TextArea post) {
         Container postStyles = new Container(BoxLayout.x());
         postStyles.setScrollableX(true);
-        
         int size = convertToPixels(8);
         ButtonGroup bg = new ButtonGroup();
         for(String s : POST_STYLES) {
@@ -74,7 +69,7 @@ public class NewPostForm extends Form {
             stl.setMarginUnit(Style.UNIT_TYPE_DIPS);
             stl.setMargin(1, 1, 1, 1);
             int strokeColor = 0xffffff;
-            if(s.equals("TextArea")) {
+            if(s.equals("Label")) {
                 stl.setBgTransparency(255);
                 stl.setBgColor(0xffffff);
                 strokeColor = 0;
@@ -91,14 +86,10 @@ public class NewPostForm extends Form {
     }
 
     private void changeStyle(TextArea post, String s) {
-        LayeredLayout ll = (LayeredLayout)post.getParent().getLayout();
-        if(s.equals("TextArea")) {
+        if(s.equals("Label")) {
             post.setUIID(s);
-            ll.getOrCreateConstraint(post).setInsets("0px");
-            post.getAllStyles().setBorder(Border.createEmpty());
             post.getParent().setUIID("Container");
         } else {
-            ll.getOrCreateConstraint(post).setInsets("auto");
             post.setUIID("PostStyleText");
             post.getParent().setUIID(s);
         }
