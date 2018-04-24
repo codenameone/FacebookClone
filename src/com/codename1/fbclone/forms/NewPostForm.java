@@ -43,15 +43,16 @@ public class NewPostForm extends Form {
         userSettings.add(CENTER,
                 BoxLayout.encloseY(
                         new Label(me.fullName(), "MultiLine1"),
-                        FlowLayout.encloseIn(friends)
-                ));
+                        FlowLayout.encloseIn(friends)));
         add(NORTH, userSettings);
         TextArea post = new TextArea(2, 80);
         Container postStyles = createPostStyles(post);
         add(CENTER, LayeredLayout.encloseIn(post, postStyles));
-        LayeredLayout postParentLayout = (LayeredLayout)post.getParent().getLayout();
+        LayeredLayout postParentLayout = (LayeredLayout)
+                post.getParent().getLayout();
         postParentLayout.getOrCreateConstraint(post).setInsets("0px");
-        postParentLayout.getOrCreateConstraint(postStyles).setInsets("auto 0px 0px 0px");
+        postParentLayout.getOrCreateConstraint(postStyles).
+                setInsets("auto 0px 0px 0px");
         postParentLayout.setReferenceComponentBottom(post, postStyles, 1f);
         setEditOnShow(post);
     }
@@ -81,23 +82,25 @@ public class NewPostForm extends Form {
                     create().strokeColor(strokeColor).
                     strokeOpacity(255).
                     stroke(0.5f, true));
-            postStyleButton.addActionListener(e -> {
-                LayeredLayout ll = (LayeredLayout)post.getParent().getLayout();
-                if(s.equals("TextArea")) {
-                    post.setUIID(s);
-                    ll.getOrCreateConstraint(post).setInsets("0px");
-                    post.getAllStyles().setBorder(Border.createEmpty());
-                    post.getParent().setUIID("Container");
-                } else {
-                    ll.getOrCreateConstraint(post).setInsets("auto");
-                    post.setUIID("PostStyleText");
-                    post.getParent().setUIID(s);
-                }
-                revalidate();
-            });
+            postStyleButton.addActionListener(e -> changeStyle(post, s));
             postStyleButton.setPreferredSize(new Dimension(size, size));
             postStyles.add(postStyleButton);
         }
         return postStyles;        
+    }
+
+    private void changeStyle(TextArea post, String s) {
+        LayeredLayout ll = (LayeredLayout)post.getParent().getLayout();
+        if(s.equals("TextArea")) {
+            post.setUIID(s);
+            ll.getOrCreateConstraint(post).setInsets("0px");
+            post.getAllStyles().setBorder(Border.createEmpty());
+            post.getParent().setUIID("Container");
+        } else {
+            ll.getOrCreateConstraint(post).setInsets("auto");
+            post.setUIID("PostStyleText");
+            post.getParent().setUIID(s);
+        }
+        revalidate();
     }
 }
