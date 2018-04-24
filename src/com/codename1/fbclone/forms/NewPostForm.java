@@ -48,9 +48,11 @@ public class NewPostForm extends Form {
         add(NORTH, userSettings);
         TextArea post = new TextArea(2, 80);
         Container postStyles = createPostStyles(post);
-        add(CENTER, LayeredLayout.encloseIn(
-                BorderLayout.center(post), 
-                BorderLayout.south(postStyles)));
+        add(CENTER, LayeredLayout.encloseIn(post, postStyles));
+        LayeredLayout postParentLayout = (LayeredLayout)post.getParent().getLayout();
+        postParentLayout.getOrCreateConstraint(post).setInsets("0px");
+        postParentLayout.getOrCreateConstraint(postStyles).setInsets("auto 0px 0px 0px");
+        postParentLayout.setReferenceComponentBottom(post, postStyles, 1f);
         setEditOnShow(post);
     }
     
@@ -80,16 +82,14 @@ public class NewPostForm extends Form {
                     strokeOpacity(255).
                     stroke(0.5f, true));
             postStyleButton.addActionListener(e -> {
-                BorderLayout bl = (BorderLayout)post.getParent().getLayout();
+                LayeredLayout ll = (LayeredLayout)post.getParent().getLayout();
                 if(s.equals("TextArea")) {
-                    bl.setCenterBehavior(
-                            BorderLayout.CENTER_BEHAVIOR_CENTER);
                     post.setUIID(s);
+                    ll.getOrCreateConstraint(post).setInsets("0px");
                     post.getAllStyles().setBorder(Border.createEmpty());
                     post.getParent().setUIID("Container");
                 } else {
-                    bl.setCenterBehavior(
-                            BorderLayout.CENTER_BEHAVIOR_CENTER_ABSOLUTE);
+                    ll.getOrCreateConstraint(post).setInsets("auto");
                     post.setUIID("PostStyleText");
                     post.getParent().setUIID(s);
                 }
