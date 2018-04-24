@@ -77,9 +77,8 @@ public class FriendsContainer extends Container {
         Container cnt = 
                 BoxLayout.encloseY(name,
                         GridLayout.encloseIn(2, confirm, delete));
-        cnt.setUIID("HalfPaddedContainer");
-        return BorderLayout.centerEastWest(
-                FlowLayout.encloseMiddle(cnt), null, 
+        cnt.setUIID("PaddedContainer");
+        return BorderLayout.centerEastWest(cnt, null, 
                 new Label(avatar, "Container"));
     }    
     
@@ -90,7 +89,5 @@ public class FriendsContainer extends Container {
             return FlowLayout.encloseMiddle(titleLabel, countLabel);
         }
         return titleLabel;
-    }
-    
-    
+    }    
 }

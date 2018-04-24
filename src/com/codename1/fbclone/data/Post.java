@@ -5,7 +5,6 @@ import com.codename1.properties.LongProperty;
 import com.codename1.properties.Property;
 import com.codename1.properties.PropertyBusinessObject;
 import com.codename1.properties.PropertyIndex;
-import com.codename1.ui.EncodedImage;
 
 public class Post implements PropertyBusinessObject {
     public final Property<String, Post> id = new Property<>("id");
@@ -13,7 +12,6 @@ public class Post implements PropertyBusinessObject {
     public final LongProperty<Post> date =  new LongProperty<>("date");
     public final Property<String, Post> title = new Property<>("title");
     public final Property<String, Post> content = new Property<>("content");
-    public final Property<String, Post> type = new Property<>("type");
     public final Property<String, Post> visibility = new Property<>("visibility");
     public final Property<String, Post> styling = new Property<>("styling");
     
@@ -24,7 +22,7 @@ public class Post implements PropertyBusinessObject {
     
     
     private final PropertyIndex idx = new PropertyIndex(this, "Post", 
-            id, user, date, title, content, type, visibility, styling, comments, likes);
+            id, user, date, title, content, visibility, styling, comments, likes);
     
     @Override
     public PropertyIndex getPropertyIndex() {

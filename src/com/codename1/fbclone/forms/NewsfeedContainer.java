@@ -2,7 +2,6 @@ package com.codename1.fbclone.forms;
 
 import com.codename1.components.SpanLabel;
 import com.codename1.fbclone.components.RichTextView;
-import com.codename1.fbclone.data.Comment;
 import com.codename1.fbclone.data.Post;
 import com.codename1.fbclone.data.User;
 import com.codename1.fbclone.server.ServerAPI;
@@ -12,10 +11,8 @@ import static com.codename1.ui.CN.*;
 import com.codename1.ui.Component;
 import com.codename1.ui.Container;
 import com.codename1.ui.FontImage;
-import com.codename1.ui.Image;
 import com.codename1.ui.InfiniteContainer;
 import com.codename1.ui.Label;
-import com.codename1.ui.TextArea;
 import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.layouts.FlowLayout;
@@ -30,7 +27,7 @@ public class NewsfeedContainer extends InfiniteContainer {
     @Override
     public Component[] fetchComponents(int index, int amount) {        
         ArrayList<Component> components = new ArrayList<>();
-        if(lastTime == 0 || index == 0) {
+        if(index == 0) {
             lastTime = System.currentTimeMillis();
             components.add(createPostBar());
             components.add(UIUtils.createSpace());
@@ -50,10 +47,10 @@ public class NewsfeedContainer extends InfiniteContainer {
         return cmps;
     }
     
-    private Container createNewsItem(User u, Post p) {
+    private Container createNewsTitle(User u, Post p) {
         Button avatar = new Button("", u.getAvatar(6.5f), "CleanButton");
         Button name = new Button(u.fullName(), "PostTitle");
-        Button postTime = new Button(formatRelativeTime(p.date.get()), 
+        Button postTime = new Button(UIUtils.formatTimeAgo(p.date.get()), 
                 "PostSubTitle");
         Button menu = new Button("", "Label");
         FontImage.setMaterialIcon(menu, 
@@ -62,6 +59,11 @@ public class NewsfeedContainer extends InfiniteContainer {
                 FlowLayout.encloseMiddle(BoxLayout.encloseY(name, postTime)), 
                 FlowLayout.encloseIn(menu), avatar);
         titleArea.setUIID("HalfPaddedContainer");
+        return titleArea;
+    }
+    
+    private Container createNewsItem(User u, Post p) {
+        Container titleArea = createNewsTitle(u, p);
         Component body;
         if(p.content.get().indexOf('<') > -1) {
             body = new RichTextView(p.content.get());
@@ -69,16 +71,24 @@ public class NewsfeedContainer extends InfiniteContainer {
             body = new SpanLabel(p.content.get());
         }
         body.setUIID("HalfPaddedContainer");
-
-        
         Button like = new Button("Like", "CleanButton");
         Button comment = new Button("Comment", "CleanButton");
         Button share = new Button("Share", "CleanButton");
         FontImage.setMaterialIcon(like, FontImage.MATERIAL_THUMB_UP);
-        FontImage.setMaterialIcon(comment, FontImage.MATERIAL_COMMENT);
+        FontImage.setMaterialIcon(comment, 
+                FontImage.MATERIAL_COMMENT);
         FontImage.setMaterialIcon(share, FontImage.MATERIAL_SHARE);
         
-        Container stats = new Container(new BorderLayout(), "PaddedContainer");
+        Container buttonBar = GridLayout.encloseIn(3, like, comment, share);
+        buttonBar.setUIID("HalfPaddedContainer");
+        
+        return BoxLayout.encloseY(
+                titleArea, body, createPostStats(p), buttonBar);
+    }
+
+    private Container createPostStats(Post p) {
+        Container stats = new Container(new BorderLayout(), 
+                "PaddedContainer");
         if(p.likes.size() > 0) {
             Label thumbUp = new Label("", "SmallBlueCircle");
             FontImage.setMaterialIcon(thumbUp, 
@@ -91,24 +101,7 @@ public class NewsfeedContainer extends InfiniteContainer {
             stats.add(EAST, new Label(p.comments.size() + " comments", 
                     "SmallLabel"));
         }
-        
-        Container buttonBar = GridLayout.encloseIn(3, like, comment, share);
-        buttonBar.setUIID("HalfPaddedContainer");
-        
-        return BoxLayout.encloseY(titleArea, body, stats, buttonBar);
-    }
-    
-    private String formatRelativeTime(long time) {
-        long relativeTime = System.currentTimeMillis() - time;
-        if(relativeTime < 60000) {
-            return "Just now";
-        }
-        relativeTime /= 60000;
-        if(relativeTime < 60) {
-            return relativeTime + " minutes ago";
-        }
-        return L10NManager.getInstance().
-                        formatDateShortStyle(new Date(time));
+        return stats;        
     }
     
     private Container createPostBar() {
