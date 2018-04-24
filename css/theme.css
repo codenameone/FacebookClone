@@ -472,10 +472,10 @@ PostStylePurple {
 PostStyleText {
     background: transparent;
     color: white;
-    padding: 3mm;
+    padding: 1.5mm;
     text-align: center;
     font-family:  "native:MainRegular";    
-    font-size: 5mm;            
+    font-size: 3.5mm;            
 }
 
 SmallLabel {

@@ -2,14 +2,12 @@ package com.codename1.fbclone.forms;
 
 import com.codename1.fbclone.data.User;
 import com.codename1.fbclone.server.ServerAPI;
-import com.codename1.io.Log;
 import com.codename1.ui.Button;
 import com.codename1.ui.ButtonGroup;
 import com.codename1.ui.Form;
 import static com.codename1.ui.CN.*;
 import com.codename1.ui.Container;
 import com.codename1.ui.FontImage;
-import com.codename1.ui.Graphics;
 import com.codename1.ui.Label;
 import com.codename1.ui.RadioButton;
 import com.codename1.ui.TextArea;
@@ -27,7 +25,6 @@ public class NewPostForm extends Form {
     private static final String[] POST_STYLES = { 
         "TextArea", "PostStyleHearts", "PostStyleHands", "PostStyleBlack", 
         "PostStyleRed", "PostStylePurple" };
-    private Container postStyles;
     public NewPostForm() {
         super("Create Post", new BorderLayout());
         Form current = getCurrentForm();
@@ -47,37 +44,9 @@ public class NewPostForm extends Form {
                         new Label(me.fullName(), "MultiLine1"),
                         FlowLayout.encloseIn(friends)));
         add(NORTH, userSettings);
-        TextArea post = new TextArea(2, 80) {
-
-            @Override
-            protected Dimension calcPreferredSize() {
-                
-                // Calculate the preferred size of this text area so that 
-                // it never overlaps the poststyle buttons below it
-                Dimension out = super.calcPreferredSize();
-                if (postStyles != null && getParent() != null) {
-                    
-                    int maxHeight = getParent().getHeight()
-                            -postStyles.getPreferredH()
-                            -getParent().getStyle().getVerticalPadding() 
-                            -postStyles.getStyle().getVerticalMargins() 
-                            -getStyle().getVerticalMargins();
-                    
-                    out.setHeight(
-                            Math.max(0,
-                                Math.min(
-                                        out.getHeight(), 
-                                        maxHeight
-                                )
-                            )
-                    );
-                }
-                return out;
-            }
-            
-        };
-        //registerAnimated(post);
-        postStyles = createPostStyles(post);
+        TextArea post = new TextArea(3, 80);
+        post.setGrowByContent(false);
+        Container postStyles = createPostStyles(post);
         add(CENTER, LayeredLayout.encloseIn(post, postStyles));
         LayeredLayout postParentLayout = (LayeredLayout)
                 post.getParent().getLayout();
