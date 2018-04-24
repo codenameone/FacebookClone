@@ -51,7 +51,6 @@ public class MoreContainer extends Container {
         b.setIconUIID("LargeCircleIcon");
         b.getIconComponent().getAllStyles().setBorder(RoundBorder.create().
                 color(color));
-        
         return b;
     }
 }

@@ -1,6 +1,5 @@
 package com.codename1.fbclone.data;
 
-import com.codename1.io.ConnectionRequest;
 import com.codename1.io.Log;
 import com.codename1.properties.ListProperty;
 import com.codename1.properties.LongProperty;
@@ -14,7 +13,6 @@ import com.codename1.ui.Graphics;
 import com.codename1.ui.Image;
 import com.codename1.ui.URLImage;
 import com.codename1.ui.plaf.Style;
-import com.codename1.util.SuccessCallback;
 import java.io.IOException;
 import java.io.InputStream;
 

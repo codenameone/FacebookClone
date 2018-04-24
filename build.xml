@@ -21,7 +21,7 @@
         classpath="lib/cn1css-ant-task.jar"/>
 
     <target name="compile-css">
-        <compileCSS/>
+        <!-- compileCSS/ -->
     </target>
 
     <target depends="init,compile,jar" name="compile-test">

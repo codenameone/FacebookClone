@@ -6,7 +6,7 @@ import java.util.Date;
 
 public class UIUtils {
     public static final long HOUR = 60 * 60000;
-    public static final long DAY = 60 * 60000;
+    public static final long DAY = 24 * HOUR;
     
     public static Label createSpace() {
         Label l = new Label("", "PaddedSeparator");

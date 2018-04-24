@@ -251,7 +251,7 @@ TitleSearch {
     font-size: 2.6mm;
     border: 1px #000000 cn1-pill-border;   
     background-color: #433db6;
-    padding: 0.5mm 2mm 0.5mm 2mm;
+    padding: 0.5mm 4mm 0.5mm 4mm;
     margin: 0.5mm 1.5mm 0.5mm 1.5mm;
 }
 
@@ -263,12 +263,12 @@ Tab {
     padding: 2mm 2mm 1mm 2mm;
     border: none;
     background: white;
-    margin: 0px 0px 2px 0px;
+    margin: 1px 0px 1px 0px;
 }
 
 TabsContainer {
     margin: 0px;
-    padding: 0px 0px 1px 0px;
+    padding: 1px 0px 1px 0px;
     background: gray;
 }
 
@@ -332,7 +332,7 @@ CleanButton {
     cn1-derive: BaseButton;
     font-family:  "native:MainLight";
     font-size: 2.5mm;        
-    margin: 0;
+    margin: 0px;
     color: #4B4F56;
 }
 

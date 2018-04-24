@@ -21,7 +21,7 @@ public class NotificationsContainer extends InfiniteContainer {
     
     @Override
     public Component[] fetchComponents(int index, int amount) {
-        if(lastTime == 0 || index == 0) {
+        if(index == 0) {
             lastTime = System.currentTimeMillis();
         }
         List<Notification> response = ServerAPI.fetchNotifications(lastTime, amount);

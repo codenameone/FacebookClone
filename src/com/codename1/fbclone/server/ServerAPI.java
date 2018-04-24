@@ -5,7 +5,6 @@ import com.codename1.fbclone.data.Notification;
 import com.codename1.fbclone.data.Post;
 import com.codename1.fbclone.data.User;
 import com.codename1.fbclone.forms.UIUtils;
-import com.codename1.util.SuccessCallback;
 import static com.codename1.ui.CN.*;
 import com.codename1.ui.FontImage;
 import java.util.ArrayList;
@@ -15,7 +14,7 @@ public class ServerAPI {
     private static User me;
 
     private static final String avatarUrl = "https://www.codenameone.com/images/diverseui-avatars/";
-    private static final long firstNotification = System.currentTimeMillis();
+    private static final long initTime = System.currentTimeMillis();
     private final static User[] dummyUsers; 
     
     static {
@@ -56,7 +55,7 @@ public class ServerAPI {
     }
     
     public static List<Post> fetchTimelinePosts(long since, int amount) {
-        if(since >= firstNotification) {
+        if(since >= initTime) {
             Comment firstPost = new Comment().
                     date.set(System.currentTimeMillis()).
                     text.set("First post!!!").
@@ -68,7 +67,6 @@ public class ServerAPI {
                     content.set("This is a <b>POST</b> that includes HTML").
                     date.set(System.currentTimeMillis() - 60000).
                     id.set("Post1").
-                    type.set("html").
                     likes.add(ServerAPI.me()).
                     comments.add(firstPost);
             
@@ -81,20 +79,20 @@ public class ServerAPI {
 
     
     public static List<Notification> fetchNotifications(long since, int amount) {
-        if(since > firstNotification + UIUtils.DAY) {
+        if(since < initTime - UIUtils.DAY) {
             return null;
         } 
         List<Notification> response = new ArrayList<>();
         response.add(new Notification().id.set("Notify-1").
                 user.set(dummyUsers[0]).
                 text.set("liked Your Post").
-                date.set(firstNotification + 60000).
+                date.set(initTime - 60000).
                 reaction.set("" + FontImage.MATERIAL_FAVORITE).
                 reactionColor.set(0xff0000));
         response.add(new Notification().id.set("Notify-2").
                 user.set(dummyUsers[1]).
                 text.set("commented on your post").
-                date.set(firstNotification + 60000000).
+                date.set(initTime - 600000000).
                 reaction.set("" + FontImage.MATERIAL_CHAT).
                 reactionColor.set(0xff00));
         return response;
