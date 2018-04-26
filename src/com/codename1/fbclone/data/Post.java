@@ -16,7 +16,7 @@ public class Post implements PropertyBusinessObject {
     public final Property<String, Post> styling = new Property<>("styling");
     
     public final ListProperty<Comment, Post> comments = 
-            new ListProperty<>("comment", Comment.class);
+            new ListProperty<>("comments", Comment.class);
     public final ListProperty<User, Post> likes = 
             new ListProperty<>("likes", User.class);
     
