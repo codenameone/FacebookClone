@@ -3,6 +3,7 @@ package com.codename1.fbclone;
 import com.codename1.fbclone.forms.LoginForm;
 import com.codename1.fbclone.forms.MainForm;
 import com.codename1.fbclone.forms.SignupForm;
+import com.codename1.fbclone.server.ServerAPI;
 import com.codename1.ui.Form;
 import com.codename1.ui.layouts.BorderLayout;
 import static com.codename1.ui.CN.*;
@@ -27,7 +28,11 @@ public class UIController {
         anim.start();
         UITimer.timer(20, true, splash, () -> {
             if(anim.isFinished()) {
-                showLoginForm();
+                if(!ServerAPI.isLoggedIn()) {
+                    showLoginForm();
+                } else {
+                    showMainUI();
+                }
             } else {
                 logo.getUnselectedStyle().setOpacity(anim.getValue() + 127);
                 logo.repaint();

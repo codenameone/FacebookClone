@@ -1,5 +1,8 @@
 package com.codename1.fbclone.forms;
 
+import com.codename1.components.InfiniteProgress;
+import com.codename1.components.ToastBar;
+import com.codename1.fbclone.data.Post;
 import com.codename1.fbclone.data.User;
 import com.codename1.fbclone.server.ServerAPI;
 import com.codename1.ui.Button;
@@ -7,6 +10,7 @@ import com.codename1.ui.ButtonGroup;
 import com.codename1.ui.Form;
 import static com.codename1.ui.CN.*;
 import com.codename1.ui.Container;
+import com.codename1.ui.Dialog;
 import com.codename1.ui.FontImage;
 import com.codename1.ui.Label;
 import com.codename1.ui.RadioButton;
@@ -17,7 +21,6 @@ import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.layouts.FlowLayout;
 import com.codename1.ui.layouts.LayeredLayout;
-import com.codename1.ui.plaf.Border;
 import com.codename1.ui.plaf.RoundRectBorder;
 import com.codename1.ui.plaf.Style;
 
@@ -25,6 +28,8 @@ public class NewPostForm extends Form {
     private static final String[] POST_STYLES = { 
         "Label", "PostStyleHearts", "PostStyleHands", "PostStyleBlack", 
         "PostStyleRed", "PostStylePurple" };
+    private TextArea post;
+    private String postStyleValue;
     public NewPostForm() {
         super("Create Post", new BorderLayout());
         Form current = getCurrentForm();
@@ -33,7 +38,7 @@ public class NewPostForm extends Form {
                         WHEN_USES_TITLE_OTHERWISE_ARROW, 
                 e -> current.showBack());
         getToolbar().addMaterialCommandToRightBar("", 
-                FontImage.MATERIAL_DONE, e -> {});
+                FontImage.MATERIAL_DONE, e -> post(current));
         User me = ServerAPI.me();
         Container userSettings = BorderLayout.west(
                 new Label(me.getAvatar(6.5f), "HalfPaddedContainer"));
@@ -44,7 +49,7 @@ public class NewPostForm extends Form {
                         new Label(me.fullName(), "MultiLine1"),
                         FlowLayout.encloseIn(friends)));
         add(NORTH, userSettings);
-        TextArea post = new TextArea(3, 80);
+        post = new TextArea(3, 80);
         post.setUIID("Label");
         post.setGrowByContent(false);
         Container postStyles = createPostStyles(post);
@@ -53,6 +58,18 @@ public class NewPostForm extends Form {
         setEditOnShow(post);
     }
     
+    private void post(Form previousForm) {
+        Dialog dlg = new InfiniteProgress().showInifiniteBlocking();
+        if(!ServerAPI.post(new Post().
+                content.set(post.getText()).
+                visibility.set("public").
+                styling.set(postStyleValue))) {
+            dlg.dispose();
+            ToastBar.showErrorMessage("Error posting to server");
+            return;
+        }
+        previousForm.showBack();
+    }
     
     private Container createPostStyles(TextArea post) {
         Container postStyles = new Container(BoxLayout.x());
@@ -89,9 +106,11 @@ public class NewPostForm extends Form {
         if(s.equals("Label")) {
             post.setUIID(s);
             post.getParent().setUIID("Container");
+            postStyleValue = null;
         } else {
             post.setUIID("PostStyleText");
             post.getParent().setUIID(s);
+            postStyleValue = s;
         }
         revalidate();
     }

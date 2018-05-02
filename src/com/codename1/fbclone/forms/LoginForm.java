@@ -1,6 +1,10 @@
 package com.codename1.fbclone.forms;
 
+import com.codename1.components.InfiniteProgress;
+import com.codename1.components.ToastBar;
 import com.codename1.fbclone.UIController;
+import com.codename1.fbclone.data.User;
+import com.codename1.fbclone.server.ServerAPI;
 import com.codename1.ui.Button;
 import com.codename1.ui.Container;
 import com.codename1.ui.Form;
@@ -8,9 +12,11 @@ import com.codename1.ui.Label;
 import com.codename1.ui.layouts.BorderLayout;
 import static com.codename1.ui.CN.*;
 import com.codename1.ui.ComponentGroup;
+import com.codename1.ui.Dialog;
 import com.codename1.ui.TextField;
 import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.layouts.FlowLayout;
+import com.codename1.util.Callback;
 
 public class LoginForm extends Form {
     private Label logo = new Label("\uf308", "IconFont");
@@ -31,7 +37,29 @@ public class LoginForm extends Form {
         logoContainer.setUIID("LoginTitle");
         
         signUp.addActionListener(e -> UIController.showSignup());
-        login.addActionListener(e -> UIController.showMainUI());
+        login.addActionListener(e -> {
+            User u = new User().
+                    password.set(password.getText());
+            if(user.getText().contains("@")) {
+                u.email.set(user.getText());
+            } else {
+                u.phone.set(user.getText());
+            }
+            Dialog d = new InfiniteProgress().showInifiniteBlocking();
+            ServerAPI.login(u, new Callback<User>() {
+                @Override
+                public void onSucess(User value) {
+                    d.dispose();
+                    UIController.showMainUI();            
+                }
+
+                @Override
+                public void onError(Object sender, Throwable err, int errorCode, String errorMessage) {
+                    d.dispose();
+                    ToastBar.showErrorMessage("Login Failed");
+                }
+            });
+        });
         
         add(NORTH, logoContainer);
         if(!isTablet()) {

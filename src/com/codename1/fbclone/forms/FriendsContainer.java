@@ -1,5 +1,7 @@
 package com.codename1.fbclone.forms;
 
+import com.codename1.components.FloatingActionButton;
+import com.codename1.contacts.Contact;
 import com.codename1.fbclone.data.User;
 import com.codename1.fbclone.server.ServerAPI;
 import com.codename1.ui.Button;
@@ -8,13 +10,14 @@ import com.codename1.ui.Container;
 import com.codename1.ui.EncodedImage;
 import com.codename1.ui.Image;
 import static com.codename1.ui.CN.*;
+import com.codename1.ui.Display;
+import com.codename1.ui.FontImage;
 import com.codename1.ui.Label;
 import com.codename1.ui.URLImage;
 import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.layouts.FlowLayout;
 import com.codename1.ui.layouts.GridLayout;
-import com.codename1.ui.plaf.Border;
 
 public class FriendsContainer extends Container {
     public FriendsContainer() {
@@ -22,6 +25,7 @@ public class FriendsContainer extends Container {
         setScrollableY(true);
         init();
         addPullToRefresh(() -> {
+            ServerAPI.refreshMe();
             removeAll();
             init();
             revalidate();
@@ -61,7 +65,7 @@ public class FriendsContainer extends Container {
             add(UIUtils.createHalfSpace());
         }
     }
-    
+        
     private Container friendRequestEntry(User u, Image avatar, 
             boolean request) {
         Label name = new Label(u.fullName(), "FriendName");

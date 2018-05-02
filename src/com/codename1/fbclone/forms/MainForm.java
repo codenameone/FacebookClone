@@ -1,6 +1,12 @@
 package com.codename1.fbclone.forms;
 
+import com.codename1.components.FloatingActionButton;
+import com.codename1.contacts.Contact;
+import com.codename1.fbclone.server.ServerAPI;
 import com.codename1.ui.Button;
+import static com.codename1.ui.CN.startThread;
+import com.codename1.ui.Container;
+import com.codename1.ui.Display;
 import com.codename1.ui.FontImage;
 import com.codename1.ui.Form;
 import com.codename1.ui.Tabs;
@@ -12,8 +18,15 @@ public class MainForm extends Form {
         super("", new BorderLayout());
         mainUI.addTab("", FontImage.MATERIAL_WEB, 5f, 
                 new NewsfeedContainer());
+        
+        
+        FloatingActionButton fab = 
+                FloatingActionButton.createFAB(FontImage.MATERIAL_SYNC);
+        Container friends = fab.bindFabToContainer(new FriendsContainer());
+        fab.addActionListener(e -> uploadContacts());
+        
         mainUI.addTab("", FontImage.MATERIAL_PEOPLE_OUTLINE, 5f, 
-                new FriendsContainer());
+                friends);
         mainUI.addTab("", FontImage.MATERIAL_NOTIFICATIONS_NONE, 
                 5f, new NotificationsContainer());
         mainUI.addTab("", FontImage.MATERIAL_MENU, 5f,
@@ -28,5 +41,13 @@ public class MainForm extends Form {
         FontImage.setMaterialIcon(searchButton, 
                 FontImage.MATERIAL_SEARCH);
         getToolbar().setTitleComponent(searchButton);
+    }
+    
+    private void uploadContacts() {
+        startThread(() -> {
+            Contact[] cnt = Display.getInstance().
+                    getAllContacts(true, true, false, true, true, false);
+            ServerAPI.uploadContacts(cnt);
+        }, "ContactUploader").start();
     }
 }

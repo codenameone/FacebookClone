@@ -8,7 +8,8 @@ import com.codename1.properties.PropertyIndex;
 
 public class Post implements PropertyBusinessObject {
     public final Property<String, Post> id = new Property<>("id");
-    public final Property<User, Post> user = new Property<>("user");
+    public final Property<User, Post> user = new Property<>("user", 
+            User.class);
     public final LongProperty<Post> date =  new LongProperty<>("date");
     public final Property<String, Post> title = new Property<>("title");
     public final Property<String, Post> content = new Property<>("content");

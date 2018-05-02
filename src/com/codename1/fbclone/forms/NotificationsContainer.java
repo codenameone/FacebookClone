@@ -17,21 +17,19 @@ import com.codename1.ui.plaf.RoundBorder;
 import java.util.List;
 
 public class NotificationsContainer extends InfiniteContainer {
-    private long lastTime;
-    
     @Override
     public Component[] fetchComponents(int index, int amount) {
-        if(index == 0) {
-            lastTime = System.currentTimeMillis();
+        int page = index / amount;
+        if(index % amount > 0) {
+            page++;
         }
-        List<Notification> response = ServerAPI.fetchNotifications(lastTime, amount);
+        List<Notification> response = ServerAPI.listNotifications(page, amount);
         if(response == null) {
             return null;
         }
         Component[] notifications = new Component[response.size()];
         int iter = 0;
         for(Notification n : response) {
-            lastTime = n.date.getLong();
             notifications[iter] = createNotificationEntry(n);
             iter++;
         }

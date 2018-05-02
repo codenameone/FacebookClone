@@ -1,8 +1,10 @@
 package com.codename1.fbclone.forms;
 
 import com.codename1.l10n.L10NManager;
+import com.codename1.ui.Component;
 import com.codename1.ui.Label;
 import java.util.Date;
+import java.util.List;
 
 public class UIUtils {
     public static final long HOUR = 60 * 60000;
@@ -34,5 +36,11 @@ public class UIUtils {
         }
         return L10NManager.getInstance().
                 formatDateTimeShort(new Date(time));
+    }
+    
+    public static Component[] toArray(List<Component> components) {
+        Component[] cmps = new Component[components.size()];
+        components.toArray(cmps);
+        return cmps;
     }
 }

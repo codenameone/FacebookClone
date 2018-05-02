@@ -22,29 +22,31 @@ import java.util.Date;
 import java.util.List;
 
 public class NewsfeedContainer extends InfiniteContainer {
-    private long lastTime;
 
     @Override
     public Component[] fetchComponents(int index, int amount) {        
         ArrayList<Component> components = new ArrayList<>();
         if(index == 0) {
-            lastTime = System.currentTimeMillis();
             components.add(createPostBar());
             components.add(UIUtils.createSpace());
         }
-        List<Post> response = ServerAPI.fetchTimelinePosts(lastTime, amount);
+        int page = index / amount;
+        if(index % amount > 0) {
+            page++;
+        }
+        List<Post> response = ServerAPI.newsfeed(page, amount);
         if(response == null) {
+            if(index == 0) {
+                return UIUtils.toArray(components);
+            }
             return null;
         }
             
         for(Post p : response) {
             components.add(createNewsItem(p.user.get(), p));
             components.add(UIUtils.createHalfSpace());
-            lastTime = p.date.getLong();
         }
-        Component[] cmps = new Component[components.size()];
-        components.toArray(cmps);
-        return cmps;
+        return UIUtils.toArray(components);
     }
     
     private Container createNewsTitle(User u, Post p) {

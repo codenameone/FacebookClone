@@ -1,13 +1,20 @@
 package com.codename1.fbclone.forms;
 
+import com.codename1.components.InfiniteProgress;
 import com.codename1.components.SpanLabel;
+import com.codename1.components.ToastBar;
 import com.codename1.fbclone.UIController;
 import com.codename1.fbclone.components.RichTextView;
+import com.codename1.fbclone.data.User;
+import com.codename1.fbclone.server.ServerAPI;
 import com.codename1.messaging.Message;
+import com.codename1.properties.Property;
+import com.codename1.properties.UiBinding;
 import static com.codename1.ui.CN.*;
 import com.codename1.ui.Button;
 import com.codename1.ui.ButtonGroup;
 import com.codename1.ui.Container;
+import com.codename1.ui.Dialog;
 import com.codename1.ui.FontImage;
 import com.codename1.ui.Form;
 import com.codename1.ui.Label;
@@ -23,6 +30,7 @@ import com.codename1.ui.layouts.TextModeLayout;
 import com.codename1.ui.plaf.Style;
 import com.codename1.ui.plaf.UIManager;
 import com.codename1.ui.spinner.Picker;
+import com.codename1.util.Callback;
 import java.util.Date;
 
 public class SignupForm extends Form {
@@ -81,6 +89,12 @@ public class SignupForm extends Form {
                 label("First Name").columns(12);
         TextComponent last = new TextComponent().
                 label("Last Name").columns(12);
+
+        User currentUser = new User();
+        UiBinding uib = new UiBinding();
+        uib.bind(currentUser.firstName, first);
+        uib.bind(currentUser.familyName, last);
+        
         TextModeLayout layout = new TextModeLayout(1, 2);
         Container textContainer = new Container(layout, "PaddedContainer");
         textContainer.add(layout.createConstraint().
@@ -88,14 +102,15 @@ public class SignupForm extends Form {
         textContainer.add(layout.createConstraint().
                 widthPercentage(50), last);
         
-        last.getField().setDoneListener(e -> createBirthday().show());
+        last.getField().setDoneListener(e -> 
+                createBirthday(currentUser, uib).show());
         
         s.content.addAll(title, textContainer,
-            s.createNextButton(e -> createBirthday().show()));
+            s.createNextButton(e -> createBirthday(currentUser, uib).show()));
         return s;
     }
 
-    public static SignupForm createBirthday() {
+    public static SignupForm createBirthday(User currentUser, UiBinding uib) {
         SignupForm s = new SignupForm("Birthday", 
                 "Name", 
                 getCurrentForm());
@@ -104,8 +119,11 @@ public class SignupForm extends Form {
         datePicker.setType(PICKER_TYPE_DATE);
         int twentyYears = 60000 * 60 * 24 * 365 * 20;
         datePicker.setDate(new Date(System.currentTimeMillis() - twentyYears));        
+
+        uib.bind(currentUser.birthday, datePicker);
+
         s.content.addAll(title, datePicker,
-            s.createNextButton(e -> createGender().show()));
+            s.createNextButton(e -> createGender(currentUser, uib).show()));
         return s;
     }
 
@@ -127,7 +145,7 @@ public class SignupForm extends Form {
         return rb;
     }
     
-    public static SignupForm createGender() {
+    public static SignupForm createGender(User currentUser, UiBinding uib) {
         SignupForm s = new SignupForm("Gender", 
                 "Birthday",
                 getCurrentForm());
@@ -137,23 +155,28 @@ public class SignupForm extends Form {
         RadioButton female = createGenderButton(bg, "Female", "\ue800");
         RadioButton male = createGenderButton(bg, "Male", "\ue801");
         
+        uib.bindGroup(currentUser.gender, 
+                new String[] {"Male", "Female"}, male, female);         
+        
         Container buttons = GridLayout.encloseIn(2, female, male);
         buttons.setUIID("PaddedContainer");
         
         s.content.addAll(title, buttons,
-            s.createNextButton(e -> createNumber().show()));
+            s.createNextButton(e -> createNumber(currentUser, uib).show()));
         return s;
     }
 
-    public static SignupForm createNumber() {
-        return createMobileOrEmail("Mobile Number", 
+    public static SignupForm createNumber(User currentUser, UiBinding uib) {
+        return createMobileOrEmail(currentUser, currentUser.phone, uib, 
+                "Mobile Number", 
                 "What's Your Mobile Number?",
                 "Sign Up With Email Address",
                 TextArea.PHONENUMBER,
-                e -> createEmail().show());
+                e -> createEmail(currentUser, uib).show());
     }
 
-    private static SignupForm createMobileOrEmail(String formTitle, 
+    private static SignupForm createMobileOrEmail(User currentUser, 
+            Property userProp, UiBinding uib, String formTitle, 
             String subtitle, String signUpWith, int constraint,
             ActionListener goToOther) {
         SignupForm s = new SignupForm(formTitle, getCurrentForm().getTitle(),
@@ -164,6 +187,7 @@ public class SignupForm extends Form {
                 label(formTitle).
                 columns(20).
                 constraint(constraint);
+        uib.bind(userProp, textEntry);
 
         Container textContainer = new Container(new TextModeLayout(1, 1), 
                 "PaddedContainer");
@@ -175,20 +199,23 @@ public class SignupForm extends Form {
         
         s.content.addAll(title, textContainer,
             s.createNextButton(e -> 
-                    createPassword(TextArea.PHONENUMBER == constraint, 
+                    createPassword(currentUser, uib, 
+                            TextArea.PHONENUMBER == constraint, 
                             textEntry.getText()).show()));
         return s;
     }
     
-    public static SignupForm createEmail() {
-        return createMobileOrEmail("Email Address", 
+    public static SignupForm createEmail(User currentUser, UiBinding uib) {
+        return createMobileOrEmail(currentUser, currentUser.email, uib, 
+                "Email Address", 
                 "What's Your Email Address?",
                 "Sign Up With Mobile Number",
                 TextArea.EMAILADDR,
-                e -> createNumber().show());
+                e -> createNumber(currentUser, uib).show());
     }
 
-    public static SignupForm createPassword(boolean phone, String value) {
+    public static SignupForm createPassword(
+            User currentUser, UiBinding uib, boolean phone, String value) {
         SignupForm s = new SignupForm("Password", 
                 getCurrentForm().getTitle(),
                 getCurrentForm());
@@ -197,18 +224,38 @@ public class SignupForm extends Form {
         TextComponent password = new TextComponent().
                 label("Password").
                 columns(20);
+        uib.bind(currentUser.password, password);
 
         Container textContainer = new Container(new TextModeLayout(1, 1), 
                 "PaddedContainer");
         textContainer.add(password);
         
         s.content.addAll(title, textContainer,
-            s.createNextButton(e -> createConfirmation(phone, value).show()));
+            s.createNextButton(e -> {
+                Dialog dlg = new Dialog("Signing Up...", 
+                        new BorderLayout(BorderLayout.
+                                    CENTER_BEHAVIOR_CENTER_ABSOLUTE));
+                dlg.add(CENTER, new InfiniteProgress());
+                dlg.showModeless();
+                ServerAPI.signup(currentUser, new Callback<User>() {
+                    @Override
+                    public void onSucess(User result) {
+                        dlg.dispose();
+                        createConfirmation(currentUser, phone, value).show();
+                    }
+
+                    @Override
+                    public void onError(Object sender, Throwable err, int errorCode, String errorMessage) {
+                        dlg.dispose();
+                        ToastBar.showErrorMessage("Error in server connection");
+                    }
+                });
+            }));
         return s;
     }
 
     public static SignupForm createConfirmation(
-                boolean phone, String value) {
+                User currentUser, boolean phone, String value) {
         SignupForm s = new SignupForm("Account Confirmation", "Password",
                 getCurrentForm());
         SpanLabel title;
@@ -239,7 +286,15 @@ public class SignupForm extends Form {
                 "PaddedContainer");
         textContainer.add(confirm);
         
-        Button done = s.createNextButton(e -> UIController.showMainUI());
+        Button done = s.createNextButton(e -> {
+            Dialog d = new InfiniteProgress().showInifiniteBlocking();
+            if(ServerAPI.verifyUser(confirm.getText(), !phone)) {
+                UIController.showMainUI();
+            } else {
+                d.dispose();
+                ToastBar.showErrorMessage("Verification code error!");
+            }
+        });
         done.setText("Confirm");
         s.content.addAll(title, line, textContainer, done);
         return s;

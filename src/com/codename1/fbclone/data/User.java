@@ -27,16 +27,19 @@ public class User implements PropertyBusinessObject {
             new LongProperty<>("birthday");
     public final Property<String, User> avatar = new Property<>("avatar");
     public final ListProperty<User, User> friends = 
-            new ListProperty<>("friends");
+            new ListProperty<>("friends", User.class);
     public final ListProperty<User, User> friendRequests = 
-            new ListProperty<>("friendRequests");
+            new ListProperty<>("friendRequests", User.class);
     public final ListProperty<User, User> peopleYouMayKnow = 
-            new ListProperty<>("peopleYouMayKnow");
+            new ListProperty<>("peopleYouMayKnow", User.class);
+    public final Property<String, User> authtoken = new Property<>("authtoken");
+    public final Property<String, User> password = new Property<>("password");
     
     
     private final PropertyIndex idx = new PropertyIndex(this, "User", 
             id, firstName, familyName, email, phone, gender, avatar, 
-            birthday, friends, friendRequests, peopleYouMayKnow);
+            birthday, friends, friendRequests, peopleYouMayKnow, authtoken,
+            password);
     
     @Override
     public PropertyIndex getPropertyIndex() {
