@@ -62,6 +62,11 @@ public class ServerAPI {
                         new Callback<Response<Map>>() {
                             @Override
                             public void onSucess(Response<Map> value) {
+                                if(value.getResponseCode() != 200) {
+                                    callback.onError(u, null, value.getResponseCode(), 
+                                            "Login Error");
+                                    return;
+                                }
                                 me = new User();
                                 me.getPropertyIndex().
                                      populateFromMap(value.getResponseData());
