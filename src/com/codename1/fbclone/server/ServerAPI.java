@@ -78,7 +78,8 @@ public class ServerAPI {
     }
 
     
-    public static List<Notification> fetchNotifications(long since, int amount) {
+    public static List<Notification> fetchNotifications(
+            long since, int amount) {
         if(since < initTime - UIUtils.DAY) {
             return null;
         } 

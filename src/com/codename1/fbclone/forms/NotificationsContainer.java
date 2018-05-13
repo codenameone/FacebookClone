@@ -18,13 +18,14 @@ import java.util.List;
 
 public class NotificationsContainer extends InfiniteContainer {
     private long lastTime;
-    
+
     @Override
     public Component[] fetchComponents(int index, int amount) {
         if(index == 0) {
             lastTime = System.currentTimeMillis();
         }
-        List<Notification> response = ServerAPI.fetchNotifications(lastTime, amount);
+        List<Notification> response = ServerAPI.fetchNotifications(lastTime,
+            amount);
         if(response == null) {
             return null;
         }
@@ -42,17 +43,18 @@ public class NotificationsContainer extends InfiniteContainer {
         Image avatar = n.user.get().getAvatar(13);
         Label icon = new Label("", "SmallBlueCircle");
         icon.getAllStyles().setBorder(RoundBorder.create().
-                color(n.reactionColor.get()));
+            color(n.reactionColor.get()));
         FontImage.setMaterialIcon(icon, n.reaction.get().charAt(0), 2);
         Container avatarContainer = LayeredLayout.encloseIn(
-                new Label(avatar, "HalfPaddedContainer"),
-                FlowLayout.encloseRightBottom(icon));
-        RichTextView rt = new RichTextView("<b>" + n.user.get().fullName() + 
-                "</b> " + n.text.get());
-        Label time = new Label(UIUtils.formatTimeAgo(n.date.get()), 
-                "SmallBlueLabel");
+            new Label(avatar, "HalfPaddedContainer"),
+            FlowLayout.encloseRightBottom(icon));
+        RichTextView rt = new RichTextView("<b>" + n.user.get().fullName() +
+            "</b> " + n.text.get());
+        Label time = new Label(UIUtils.formatTimeAgo(n.date.get()),
+            "SmallBlueLabel");
         Container yContainer = BoxLayout.encloseY(rt, time);
         yContainer.setUIID("HalfPaddedContainer");
-        return BorderLayout.centerEastWest(yContainer, null, avatarContainer);
+        return BorderLayout.
+            centerEastWest(yContainer, null, avatarContainer);
     }
 }
