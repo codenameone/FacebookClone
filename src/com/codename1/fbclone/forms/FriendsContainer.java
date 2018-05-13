@@ -14,7 +14,6 @@ import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.layouts.FlowLayout;
 import com.codename1.ui.layouts.GridLayout;
-import com.codename1.ui.plaf.Border;
 
 public class FriendsContainer extends Container {
     public FriendsContainer() {
@@ -30,40 +29,41 @@ public class FriendsContainer extends Container {
 
     private void init() {
         int friendCount = ServerAPI.me().friendRequests.size();
-        
+
         int imageSize = convertToPixels(18);
         EncodedImage placeholder = EncodedImage.createFromImage(
-                Image.createImage(imageSize, imageSize), false);
-        
+            Image.createImage(imageSize, imageSize), false);
+
         add(createTitle("FRIEND REQUESTS", friendCount));
         if(friendCount == 0) {
-            Container padded = new Container(new BorderLayout(), 
-                    "PaddedContainer");
-            padded.add(CENTER, 
-                    new Label("No new Friend Requests", "CenterLabel"));
+            Container padded = new Container(new BorderLayout(),
+                "PaddedContainer");
+            padded.add(CENTER,
+                new Label("No new Friend Requests", "CenterLabel"));
         } else {
             for(User u : ServerAPI.me().friendRequests) {
-                Image i = URLImage.createCachedImage(u.id.get() + "-avatar.jpg", 
-                        u.avatar.get(), placeholder, 
-                        URLImage.FLAG_RESIZE_SCALE_TO_FILL);
+                Image i = URLImage.createCachedImage(u.id.get() +
+                    "-avatar.jpg",
+                    u.avatar.get(), placeholder,
+                    URLImage.FLAG_RESIZE_SCALE_TO_FILL);
                 add(friendRequestEntry(u, i, true));
                 add(UIUtils.createHalfSpace());
             }
         }
-                
+
         add(UIUtils.createHalfSpace());
         add(createTitle("PEOPLE YOU MAY KNOW", 0));
         for(User u : ServerAPI.me().peopleYouMayKnow) {
-            Image i = URLImage.createCachedImage(u.id.get() + "-avatar.jpg", 
-                    u.avatar.get(), placeholder, 
-                    URLImage.FLAG_RESIZE_SCALE_TO_FILL);
+            Image i = URLImage.createCachedImage(u.id.get() + "-avatar.jpg",
+                u.avatar.get(), placeholder,
+                URLImage.FLAG_RESIZE_SCALE_TO_FILL);
             add(friendRequestEntry(u, i, false));
             add(UIUtils.createHalfSpace());
         }
     }
-    
-    private Container friendRequestEntry(User u, Image avatar, 
-            boolean request) {
+
+    private Container friendRequestEntry(User u, Image avatar,
+        boolean request) {
         Label name = new Label(u.fullName(), "FriendName");
         Button confirm;
         Button delete;
@@ -74,14 +74,14 @@ public class FriendsContainer extends Container {
             confirm = new Button("Add Friend", "FriendConfirm");
             delete = new Button("Remove", "FriendDelete");
         }
-        Container cnt = 
-                BoxLayout.encloseY(name,
-                        GridLayout.encloseIn(2, confirm, delete));
+        Container cnt =
+            BoxLayout.encloseY(name,
+                GridLayout.encloseIn(2, confirm, delete));
         cnt.setUIID("PaddedContainer");
-        return BorderLayout.centerEastWest(cnt, null, 
-                new Label(avatar, "Container"));
-    }    
-    
+        return BorderLayout.centerEastWest(cnt, null,
+            new Label(avatar, "Container"));
+    }
+
     private Component createTitle(String title, int count) {
         Label titleLabel = new Label(title, "FriendSubtitle");
         if(count > 0) {
@@ -89,5 +89,5 @@ public class FriendsContainer extends Container {
             return FlowLayout.encloseMiddle(titleLabel, countLabel);
         }
         return titleLabel;
-    }    
+    }
 }
