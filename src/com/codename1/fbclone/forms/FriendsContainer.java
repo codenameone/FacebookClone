@@ -46,8 +46,8 @@ public class FriendsContainer extends Container {
             for(User u : ServerAPI.me().friendRequests) {
                 Image i;
                 if(u.avatar.get() != null) {
-                    i = URLImage.createCachedImage(u.id.get() + "-avatar.jpg", 
-                        u.avatar.get(), placeholder, 
+                    i = URLImage.createCachedImage(u.id.get()+"-avatar.jpg", 
+                        u.avatarUrl(), placeholder, 
                         URLImage.FLAG_RESIZE_SCALE_TO_FILL);
                 } else {
                     i = placeholder;
@@ -63,7 +63,7 @@ public class FriendsContainer extends Container {
             Image i;
             if(u.avatar.get() != null) {
                 i = URLImage.createCachedImage(u.id.get() + "-avatar.jpg", 
-                    u.avatar.get(), placeholder, 
+                    u.avatarUrl(), placeholder, 
                     URLImage.FLAG_RESIZE_SCALE_TO_FILL);
             } else {
                 i = placeholder;

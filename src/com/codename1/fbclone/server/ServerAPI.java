@@ -6,12 +6,14 @@ import com.codename1.fbclone.data.Notification;
 import com.codename1.fbclone.data.Post;
 import com.codename1.fbclone.data.User;
 import com.codename1.io.JSONParser;
+import com.codename1.io.Log;
 import com.codename1.io.MultipartRequest;
 import com.codename1.io.Preferences;
 import com.codename1.io.Util;
 import com.codename1.io.rest.RequestBuilder;
 import com.codename1.io.rest.Response;
 import com.codename1.io.rest.Rest;
+import com.codename1.properties.PropertyBusinessObject;
 import static com.codename1.ui.CN.*;
 import com.codename1.util.Callback;
 import com.codename1.util.SuccessCallback;
@@ -24,7 +26,7 @@ import java.util.Map;
 
 public class ServerAPI {
     private static User me;
-    private static final String BASE_URL = "http://localhost:8080/";
+    public static final String BASE_URL = "http://localhost:8080/";
     private static String token;
 
     private static RequestBuilder get(String path) {
@@ -109,12 +111,21 @@ public class ServerAPI {
     public static boolean update(User u) {
         Response<String> s = post("user/update").
             body(u.getPropertyIndex().toJSON()).getAsString();
+        me.getPropertyIndex().storeJSON("me.json");
         return "OK".equals(s.getResponseData());
     }
 
     public static boolean setAvatar(String media) {
         Response<String> s = get("user/set-avatar").
             queryParam("media", media).getAsString();
+        me.getPropertyIndex().storeJSON("me.json");
+        return "OK".equals(s.getResponseData());
+    }
+
+    public static boolean setCover(String media) {
+        Response<String> s = get("user/set-cover").
+            queryParam("media", media).getAsString();
+        me.getPropertyIndex().storeJSON("me.json");
         return "OK".equals(s.getResponseData());
     }
 
@@ -262,10 +273,14 @@ public class ServerAPI {
     }
 
     public static boolean comment(Comment c) {
-        String key = post("post/new").body(c.getPropertyIndex().toJSON()).
-            getAsString().getResponseData();
-        c.id.set(key);
-        return key != null;
+        Response<String> cm = post("post/comment").
+            body(c.getPropertyIndex().toJSON()).
+            getAsString();
+        if(cm.getResponseCode() != 200) {
+            return false;
+        }
+        c.id.set(cm.getResponseData());
+        return true;
     }
 
     public static boolean like(Post p) {
@@ -274,4 +289,44 @@ public class ServerAPI {
         return ok != null && ok.equals("OK");
     }
 
+    public static List<User> searchPeople(
+            String text, int page, int size) {
+        return genericSearch("search/people", User.class, 
+            text, page, size);
+    }
+
+    public static List<Post> searchPosts(
+            String text, int page, int size) {
+        return genericSearch("search/posts", Post.class, 
+            text, page, size);
+    }
+
+    public static <T> List<T> genericSearch(String url, 
+        Class<? extends PropertyBusinessObject> type,
+        String text, int page, int size) {
+        Response<Map> result = get(url).
+            queryParam("page", "" + page).
+            queryParam("size", "" + size).
+            queryParam("q", text).getAsJsonMap();
+        if(result.getResponseCode() == 200) {
+            List<Map> l = (List<Map>)result.getResponseData().get("root");
+            if(l.size() == 0) {
+                return null;
+            }
+            List<T> responseList = new ArrayList<>();
+            for(Map m : l) {
+                try {
+                    PropertyBusinessObject pb = 
+                        (PropertyBusinessObject)type.newInstance();
+                    pb.getPropertyIndex().populateFromMap(m);
+                    responseList.add((T)pb);
+                } catch(Exception err) {
+                    Log.e(err);
+                    throw new RuntimeException(err);
+                }
+            }
+            return responseList;
+        }
+        return null;
+    }
 }

@@ -8,6 +8,7 @@ import com.codename1.fbclone.server.ServerAPI;
 import com.codename1.l10n.L10NManager;
 import com.codename1.ui.Button;
 import static com.codename1.ui.CN.*;
+import com.codename1.ui.CheckBox;
 import com.codename1.ui.Component;
 import com.codename1.ui.Container;
 import com.codename1.ui.FontImage;
@@ -49,7 +50,7 @@ public class NewsfeedContainer extends InfiniteContainer {
         return UIUtils.toArray(components);
     }
     
-    private Container createNewsTitle(User u, Post p) {
+    private static Container createNewsTitle(User u, Post p) {
         Button avatar = new Button("", u.getAvatar(6.5f), "CleanButton");
         Button name = new Button(u.fullName(), "PostTitle");
         Button postTime = new Button(UIUtils.formatTimeAgo(p.date.get()), 
@@ -64,7 +65,7 @@ public class NewsfeedContainer extends InfiniteContainer {
         return titleArea;
     }
     
-    private Container createNewsItem(User u, Post p) {
+    public static Container createNewsItem(User u, Post p) {
         Container titleArea = createNewsTitle(u, p);
         Component body;
         if(p.content.get().indexOf('<') > -1) {
@@ -73,7 +74,8 @@ public class NewsfeedContainer extends InfiniteContainer {
             body = new SpanLabel(p.content.get());
         }
         body.setUIID("HalfPaddedContainer");
-        Button like = new Button("Like", "CleanButton");
+        CheckBox like = CheckBox.createToggle("Like");
+        like.setUIID("CleanButton");
         Button comment = new Button("Comment", "CleanButton");
         Button share = new Button("Share", "CleanButton");
         FontImage.setMaterialIcon(like, FontImage.MATERIAL_THUMB_UP);
@@ -84,11 +86,15 @@ public class NewsfeedContainer extends InfiniteContainer {
         Container buttonBar = GridLayout.encloseIn(3, like, comment, share);
         buttonBar.setUIID("HalfPaddedContainer");
         
+        like.setSelected(p.likes.contains(u));
+        like.addActionListener(e -> ServerAPI.like(p));
+        comment.addActionListener(e -> new CommentsForm(p, null).show());
+        
         return BoxLayout.encloseY(
                 titleArea, body, createPostStats(p), buttonBar);
     }
 
-    private Container createPostStats(Post p) {
+    private static Container createPostStats(Post p) {
         Container stats = new Container(new BorderLayout(), 
                 "PaddedContainer");
         if(p.likes.size() > 0) {
@@ -106,7 +112,7 @@ public class NewsfeedContainer extends InfiniteContainer {
         return stats;        
     }
     
-    private Container createPostBar() {
+    private static Container createPostBar() {
         Button avatar = new Button(ServerAPI.me().getAvatar(6.5f), "Label");
         Button writePost = new Button("What's on your mind?", 
                 "NewPostButton");

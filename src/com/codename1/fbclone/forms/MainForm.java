@@ -38,6 +38,7 @@ public class MainForm extends Form {
         Button searchButton = new Button("Search", "TitleSearch");
         setMaterialIcon(searchButton, MATERIAL_SEARCH);
         getToolbar().setTitleComponent(searchButton);
+        searchButton.addActionListener(e -> new SearchForm().show());
     }
     
     private void uploadContacts() {

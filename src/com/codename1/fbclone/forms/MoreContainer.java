@@ -16,6 +16,7 @@ public class MoreContainer extends Container {
         setUIID("HalfPaddedContainer");
         setScrollableY(true);
         MultiButton me = new MultiButton(ServerAPI.me().fullName());
+        me.addActionListener(e -> new SettingsForm().show());
         me.setTextLine2("View your profile");
         me.setIcon(ServerAPI.me().getAvatar(9f));
         me.setIconUIID("PaddedContainer");

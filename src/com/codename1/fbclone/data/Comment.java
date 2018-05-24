@@ -10,7 +10,7 @@ public class Comment implements PropertyBusinessObject {
     public final Property<String, Comment> postId = new Property<>("postId");
     public final Property<String, Comment> userId = new Property<>("userId");
     public final Property<String, Comment> parentComment = 
-            new Property<>("parentComment");
+            new Property<>("parentComment", Comment.class);
     public final LongProperty<Comment> date =  new LongProperty<>("date");
     public final Property<String, Comment> text = new Property<>("text");
     
