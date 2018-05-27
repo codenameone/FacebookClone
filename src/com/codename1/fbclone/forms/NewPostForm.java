@@ -1,19 +1,27 @@
 package com.codename1.fbclone.forms;
 
 import com.codename1.components.InfiniteProgress;
+import com.codename1.components.ScaleImageLabel;
+import com.codename1.components.SliderBridge;
 import com.codename1.components.ToastBar;
 import com.codename1.fbclone.data.Post;
 import com.codename1.fbclone.data.User;
 import com.codename1.fbclone.server.ServerAPI;
+import com.codename1.io.MultipartRequest;
+import com.codename1.media.Media;
 import com.codename1.ui.Button;
 import com.codename1.ui.ButtonGroup;
 import com.codename1.ui.Form;
 import static com.codename1.ui.CN.*;
+import com.codename1.ui.Command;
+import com.codename1.ui.Component;
 import com.codename1.ui.Container;
 import com.codename1.ui.Dialog;
+import com.codename1.ui.EncodedImage;
 import com.codename1.ui.FontImage;
 import com.codename1.ui.Label;
 import com.codename1.ui.RadioButton;
+import com.codename1.ui.Slider;
 import com.codename1.ui.TextArea;
 import com.codename1.ui.Toolbar;
 import com.codename1.ui.geom.Dimension;
@@ -28,17 +36,24 @@ public class NewPostForm extends Form {
     private static final String[] POST_STYLES = { 
         "Label", "PostStyleHearts", "PostStyleHands", "PostStyleBlack", 
         "PostStyleRed", "PostStylePurple" };
-    private TextArea post;
+    private TextArea post = new TextArea(3, 80);
     private String postStyleValue;
-    public NewPostForm() {
+    private String attachment;
+    private String mime;
+    private Button postButton;
+    private NewPostForm() {
         super("Create Post", new BorderLayout());
+    }
+    
+    private void initUI(Container postStyles) {
         Form current = getCurrentForm();
         getToolbar().setBackCommand("Cancel", 
                 Toolbar.BackCommandPolicy.
                         WHEN_USES_TITLE_OTHERWISE_ARROW, 
                 e -> current.showBack());
-        getToolbar().addMaterialCommandToRightBar("", 
+        Command c = getToolbar().addMaterialCommandToRightBar("", 
                 FontImage.MATERIAL_DONE, e -> post(current));
+        postButton = getToolbar().findCommandComponent(c);
         User me = ServerAPI.me();
         Container userSettings = BorderLayout.west(
                 new Label(me.getAvatar(6.5f), "HalfPaddedContainer"));
@@ -49,21 +64,89 @@ public class NewPostForm extends Form {
                         new Label(me.fullName(), "MultiLine1"),
                         FlowLayout.encloseIn(friends)));
         add(NORTH, userSettings);
-        post = new TextArea(3, 80);
         post.setUIID("Label");
         post.setGrowByContent(false);
-        Container postStyles = createPostStyles(post);
-        add(CENTER, LayeredLayout.encloseIn(
-                BorderLayout.north(post), BorderLayout.south(postStyles)));
-        setEditOnShow(post);
+        Component l;
+        if(postStyles != null) {
+            l = LayeredLayout.encloseIn(
+                    BorderLayout.north(post), postStyles);
+        } else {
+            l = post;
+        }
+        add(CENTER, l);
+        setEditOnShow(post);        
     }
     
+    public static NewPostForm createPost() {
+        NewPostForm n = new NewPostForm();
+        Container postStyles = n.createPostStyles(n.post);
+        n.initUI(BorderLayout.south(postStyles));
+        return n;
+    }
+    
+    public static NewPostForm createImagePost(EncodedImage img, 
+            ImagePicker p) {
+        NewPostForm n = new NewPostForm();
+        n.initUI(null);
+        n.mime = "image/jpeg";
+        ScaleImageLabel i = new ScaleImageLabel(img) {
+            @Override
+            protected Dimension calcPreferredSize() {
+                return new Dimension(getDisplayWidth(), 
+                    getDisplayHeight() / 2);
+            }
+        };
+        Slider s = n.upload(p);
+        n.add(SOUTH, LayeredLayout.encloseIn(
+            i, BorderLayout.south(s)));
+        return n;
+    }
+
+    public static NewPostForm createVideoPost(Media m, ImagePicker p) {
+        NewPostForm n = new NewPostForm();
+        n.initUI(null);
+        Slider s = n.upload(p);
+        n.mime = "video/mp4";
+        Container videoContainer = new Container(new LayeredLayout()) {
+            @Override
+            protected Dimension calcPreferredSize() {
+                return new Dimension(getDisplayWidth(), 
+                    getDisplayHeight() / 2);
+            }            
+        };
+        videoContainer.add(m.getVideoComponent());
+        videoContainer.add(BorderLayout.south(s));
+        n.add(SOUTH, videoContainer);
+        n.addShowListener(e -> {
+            m.play();
+            m.setVolume(0);
+            m.setTime(Math.min(m.getDuration() / 2, 1000));
+            m.pause();
+        });
+        return n;
+    }
+
+    private Slider upload(ImagePicker p) {
+        postButton.setEnabled(false);
+        Slider s = new Slider();
+        MultipartRequest m = p.upload(e -> {
+            attachment = e;
+            postButton.setEnabled(true);
+        });
+        SliderBridge.bindProgress(m, s);
+        return s;
+    }
+        
     private void post(Form previousForm) {
         Dialog dlg = new InfiniteProgress().showInifiniteBlocking();
-        if(!ServerAPI.post(new Post().
+        Post p = new Post().
                 content.set(post.getText()).
                 visibility.set("public").
-                styling.set(postStyleValue))) {
+                styling.set(postStyleValue);
+        if(attachment != null) {
+            p.attachments.put(attachment, mime);
+        }
+        if(!ServerAPI.post(p)) {
             dlg.dispose();
             ToastBar.showErrorMessage("Error posting to server");
             return;

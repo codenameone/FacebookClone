@@ -1,5 +1,7 @@
 package com.codename1.fbclone.forms;
 
+import com.codename1.camerakit.CameraKit;
+import com.codename1.capture.Capture;
 import com.codename1.components.FloatingActionButton;
 import com.codename1.contacts.Contact;
 import com.codename1.fbclone.server.ServerAPI;
@@ -32,13 +34,27 @@ public class MainForm extends Form {
         add(CENTER, mainUI);
         
         getToolbar().addMaterialCommandToLeftBar("", 
-                MATERIAL_CAMERA_ALT, 4, e -> {});
+                MATERIAL_CAMERA_ALT, 4, e -> camera());
         getToolbar().addMaterialCommandToRightBar("", 
                 MATERIAL_CHAT, 4, e -> {});
         Button searchButton = new Button("Search", "TitleSearch");
         setMaterialIcon(searchButton, MATERIAL_SEARCH);
         getToolbar().setTitleComponent(searchButton);
         searchButton.addActionListener(e -> new SearchForm().show());
+    }
+    
+    private void camera() {
+        CameraKit ck = CameraKit.create();        
+        if(ck == null) {
+            String result = Capture.capturePhoto();
+            if(result != null) {
+                ImagePicker p = ImagePicker.create(result);
+                NewPostForm.createImagePost(p.getImage(), p).show();
+            }
+            return;
+        }
+        
+        new CameraForm(ck).show();
     }
     
     private void uploadContacts() {

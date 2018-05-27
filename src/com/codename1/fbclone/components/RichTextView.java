@@ -11,6 +11,7 @@ import com.codename1.ui.events.ActionEvent;
 import com.codename1.ui.events.ActionListener;
 import com.codename1.ui.layouts.FlowLayout;
 import com.codename1.ui.plaf.Style;
+import com.codename1.ui.plaf.UIManager;
 import com.codename1.ui.util.EventDispatcher;
 import com.codename1.util.StringUtil;
 import com.codename1.xml.XMLParser;
@@ -18,7 +19,7 @@ import java.io.IOException;
 
 public class RichTextView extends Container {
     private String text;
-    private final float fontSize = 2.6f;
+    private float fontSize = 2.6f;
     private EventDispatcher listeners = new EventDispatcher();
     
     private Font currentFont;
@@ -31,18 +32,33 @@ public class RichTextView extends Container {
     private int sizeOfSpace;
     
     public RichTextView() { 
-        init();
+        init(null);
     }
 
-    public RichTextView(String text) {
-        init();
+    public RichTextView(String text, String uiid) {
+        init(uiid);
         setText(text);
     }
 
-    private void init() {
-        defaultFont = Font.createTrueTypeFont(NATIVE_MAIN_LIGHT, fontSize); 
+    public RichTextView(String text) {
+        init(null);
+        setText(text);
+    }
+
+    private void init(String uiid) {
         boldFont = Font.createTrueTypeFont(NATIVE_MAIN_BOLD, fontSize);
         italicFont = Font.createTrueTypeFont(NATIVE_ITALIC_LIGHT, fontSize);
+        if(uiid == null) {
+            defaultFont = Font.createTrueTypeFont(NATIVE_MAIN_LIGHT, 
+                fontSize); 
+        } else {
+            Style s = UIManager.getInstance().getComponentStyle(uiid);
+            defaultFont = s.getFont();
+            boldFont = boldFont.derive(defaultFont.getHeight(), 
+                Font.STYLE_BOLD);
+            italicFont = italicFont.derive(defaultFont.getHeight(), 
+                Font.STYLE_ITALIC);
+        }
         sizeOfSpace = defaultFont.charWidth(' '); 
         currentFont = defaultFont;
     }

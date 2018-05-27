@@ -183,10 +183,9 @@ public class ServerAPI {
         return "OK".equals(s.getResponseData());
     }
 
-    public static void uploadMedia(String mime, String role,
-        String visibility,
-        String fileName, byte[] data,
-        SuccessCallback<String> callback) {
+    public static MultipartRequest uploadMedia(String mime, String role,
+            String visibility, String fileName, byte[] data,
+            SuccessCallback<String> callback) {
         MultipartRequest mp = new MultipartRequest() {
             private String mediaId;
 
@@ -206,9 +205,19 @@ public class ServerAPI {
         mp.addRequestHeader("Accept", "application/json");
         mp.addArgument("role", role);
         mp.addArgument("visibility", visibility);
-        mp.addData("file", data, mime);
+        if(data == null) {
+            try {
+                mp.addData("file", fileName, mime);
+            } catch(IOException err) {
+                Log.e(err);
+                throw new RuntimeException(err);
+            }
+        } else {
+            mp.addData("file", data, mime);
+        }
         mp.setFilename("file", fileName);
         addToQueue(mp);
+        return mp;
     }
 
     public static User me() {
@@ -328,5 +337,9 @@ public class ServerAPI {
             return responseList;
         }
         return null;
+    }
+    
+    public static String mediaUrl(String mediaId) {
+        return BASE_URL + "media/all/" + mediaId + "?auth=" + token;
     }
 }

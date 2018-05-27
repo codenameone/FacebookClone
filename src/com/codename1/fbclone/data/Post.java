@@ -2,6 +2,7 @@ package com.codename1.fbclone.data;
 
 import com.codename1.properties.ListProperty;
 import com.codename1.properties.LongProperty;
+import com.codename1.properties.MapProperty;
 import com.codename1.properties.Property;
 import com.codename1.properties.PropertyBusinessObject;
 import com.codename1.properties.PropertyIndex;
@@ -20,10 +21,14 @@ public class Post implements PropertyBusinessObject {
             new ListProperty<>("comments", Comment.class);
     public final ListProperty<User, Post> likes = 
             new ListProperty<>("likes", User.class);
+
+    public final MapProperty<String, String, Post> attachments = 
+            new MapProperty<>("attachments", String.class, String.class);
     
     
     private final PropertyIndex idx = new PropertyIndex(this, "Post", 
-            id, user, date, title, content, visibility, styling, comments, likes);
+        id, user, date, title, content, visibility, styling, comments, 
+        likes, attachments);
     
     @Override
     public PropertyIndex getPropertyIndex() {
